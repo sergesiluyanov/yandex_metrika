@@ -1,38 +1,43 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kinescope Player - Яндекс Метрика интеграция</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kinescope Player v2.166.1 - Яндекс Метрика интеграция</title>
+    <link rel="shortcut icon" href="https://sergesiluyanov.github.io/iframeelement.github.io/" referrerpolicy="origin" type="image/x-icon" />
+    
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 20px;
             background-color: #f5f5f5;
         }
+        
         .container {
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        h1 {
-            color: #333;
+        
+        .header {
             text-align: center;
             margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
         }
-        .player-container {
-            margin: 20px 0;
-            text-align: center;
-        }
+        
         .controls {
             margin: 20px 0;
             text-align: center;
         }
-        button {
-            background: #007bff;
+        
+        .controls button {
+            background: #4CAF50;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -41,105 +46,128 @@
             cursor: pointer;
             font-size: 14px;
         }
-        button:hover {
-            background: #0056b3;
+        
+        .controls button:hover {
+            background: #45a049;
         }
+        
         .status {
-            margin: 20px 0;
             padding: 15px;
-            background: #e9ecef;
-            border-radius: 5px;
-            font-family: monospace;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
         }
-        .event-log {
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .player-container {
             margin: 20px 0;
-            padding: 15px;
+            text-align: center;
+        }
+        
+        kinescope-iframe-player {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .log-container {
+            margin-top: 30px;
             background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .event-item {
-            margin: 5px 0;
-            padding: 5px;
-            background: white;
-            border-left: 3px solid #007bff;
-            padding-left: 10px;
-        }
-        .config {
-            margin: 20px 0;
+            border-radius: 8px;
             padding: 15px;
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
         }
-        input[type="text"] {
+        
+        .log-entry {
+            background: white;
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .config-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .config-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .config-section input {
+            width: 200px;
             padding: 8px;
             margin: 5px;
             border: 1px solid #ddd;
-            border-radius: 3px;
-            width: 200px;
-        }
-        label {
-            font-weight: bold;
-            margin-right: 10px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎬 Kinescope Player - Интеграция с Яндекс Метрикой</h1>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">
-            <strong>Официальная интеграция v2.166.1</strong> - с официальным скриптом iframe.ym.js<br>
-            <strong>Поддержка v2.166.1:</strong> settings: { yandexMetrics: { counterId: 'qqq' } }<br>
-            <strong>Идентификатор цели:</strong> kinescope.video_event
-        </p>
-        
-        <div class="config">
-            <h3>⚙️ Настройки</h3>
-            <label for="counterId">ID счетчика Яндекс Метрики:</label>
-            <input type="text" id="counterId" value="104153742" placeholder="Введите ID счетчика">
-            <button onclick="initializeYM()">Инициализировать Яндекс Метрику</button>
-            <button onclick="initializePlayer()">Инициализировать плеер</button>
-            <button onclick="initializePlayerWithSettings()">🎯 Инициализировать с настройками v2.166.1</button>
+        <div class="header">
+            <h1>🎬 Kinescope Player v2.166.1</h1>
+            <h2>📊 Интеграция с Яндекс Метрикой</h2>
+            <p>Автоматическая передача событий плеера в Яндекс Метрику</p>
         </div>
 
-        <div class="player-container">
-            <div id="player" style="display: none;"></div>
-            <!-- iframe плеер по умолчанию -->
-            <div id="iframePlayer">
-                <iframe 
-                    src="https://kinescope.dev/oak9QpYK2SdCoaWqDPh4n4?debug=1" 
-                    width="100%" 
-                    height="400px"
-                    frameborder="0"
-                    allowfullscreen>
-                </iframe>
+        <div class="config-section">
+            <h3>⚙️ Настройки</h3>
+            <div>
+                <label for="counterId">ID счетчика Яндекс Метрики:</label>
+                <input type="text" id="counterId" value="104153742" placeholder="Введите ID счетчика">
+            </div>
+            <div>
+                <label for="videoId">ID видео:</label>
+                <input type="text" id="videoId" value="4v3Wqopuq4hhy1VhZH3GVU" placeholder="Введите ID видео">
             </div>
         </div>
 
         <div class="controls">
-            <button onclick="playVideo()">▶️ Воспроизвести</button>
-            <button onclick="pauseVideo()">⏸️ Пауза</button>
-            <button onclick="sendCustomEvent()">📊 Отправить кастомное событие</button>
-            <button onclick="testAllEvents()">🧪 Тест всех событий</button>
-            <button onclick="testV21661Settings()">🎯 Тест настроек v2.166.1</button>
-            <button onclick="testGoalIdentifier()">🎯 Тест цели kinescope.video_event</button>
-            <button onclick="checkRealYandexMetrika()">🔍 Проверить реальную Яндекс Метрику</button>
-            <button onclick="showYandexMetrikaInstructions()">📋 Где искать события в Яндекс Метрике</button>
-            <button onclick="reloadPage()">🔄 Перезагрузить страницу (очистить заглушку)</button>
-            <button onclick="checkIntegrationStatus()">🔍 Проверить статус</button>
-            <button onclick="useIframePlayer()">🔄 Использовать iframe плеер</button>
+            <button onclick="initializePlayer()">🎬 Инициализировать плеер</button>
+            <button onclick="testEvents()">🧪 Тест событий</button>
+            <button onclick="checkYandexMetrika()">🔍 Проверить Яндекс Метрику</button>
             <button onclick="clearLog()">🗑️ Очистить лог</button>
         </div>
 
-        <div class="status">
-            <h3>📊 Статус интеграции</h3>
-            <div id="status">Не инициализировано</div>
+        <div class="status" id="status">
+            <strong>Статус:</strong> Не инициализировано
         </div>
 
-        <div class="event-log">
+        <div class="player-container">
+            <kinescope-iframe-player
+                id="player"
+                t="3"
+                referrerpolicy="strict-origin-when-cross-origin"
+                style="background-color: #f0f8ff; border-radius: 10px;">
+            </kinescope-iframe-player>
+        </div>
+
+        <div class="log-container">
             <h3>📝 Лог событий</h3>
             <div id="eventLog">События будут отображаться здесь...</div>
         </div>
@@ -160,656 +188,263 @@
     <!-- /Yandex.Metrika counter -->
 
     <!-- Скрипт интеграции с Яндекс Метрикой для iframe -->
-    <script src="https://player.kinescope.dev/v2.166.1/iframe.ym.js"></script>
+    <script src="https://player.kinescope.io/latest/iframe.ym.js"></script>
+
+    <!-- Kinescope Player v2.166.1 -->
+    <script 
+        src="https://player.kinescope.dev/v2.166.1/elements/kinescope-iframe-player.js"
+        referrerpolicy="strict-origin-when-cross-origin">
+    </script>
 
     <script>
         let player = null;
-        let ymIntegration = null;
         let eventCounter = 0;
 
-        // Проверка загрузки скриптов
-        function checkScriptsLoaded() {
-            console.log('YM loaded:', typeof window.ym !== 'undefined');
-            console.log('Kinescope iframe.ym.js loaded:', document.querySelector('script[src*="iframe.ym.js"]') !== null);
-            
-            // Проверяем Яндекс Метрику и официальный скрипт
-            if (typeof window.ym === 'undefined') {
-                console.error('Yandex Metrika not loaded');
-                return false;
-            }
-            
-            const iframeScript = document.querySelector('script[src*="iframe.ym.js"]');
-            if (!iframeScript) {
-                console.error('Kinescope iframe.ym.js not loaded');
-                return false;
-            }
-            
-            console.log('✅ Все необходимые скрипты загружены');
-            return true;
-        }
-
-        // Инициализация Яндекс Метрики
-        function initializeYM() {
-            const counterId = document.getElementById('counterId').value;
-            
-            if (!counterId) {
-                alert('Пожалуйста, введите ID счетчика Яндекс Метрики');
-                return;
-            }
-
-            // Проверяем, что Яндекс Метрика уже загружена
-            if (typeof window.ym === 'function' && !window.ym.toString().includes('console.log')) {
-                logEvent('✅ Реальная Яндекс Метрика уже загружена');
-            } else {
-                logEvent('⚠️ Яндекс Метрика не загружена - создаем заглушку для тестирования');
-                
-                // Создаем заглушку только если реальная Яндекс Метрика не загружена
-                window.ym = window.ym || function(counterId, action, goal, params) {
-                    console.log('YM Event (заглушка):', { counterId, action, goal, params });
-                    logEvent(`YM Event (заглушка): ${action} - ${goal}`, params);
-                    
-                    // Дополнительная диагностика
-                    if (action === 'reachGoal' && goal === 'kinescope.video_event') {
-                        logEvent('✅ Событие отправлено с правильным идентификатором цели', {
-                            counterId: counterId,
-                            goal: goal,
-                            params: params
-                        });
-                    }
-                    
-                    return true;
-                };
-            }
-
-            ymIntegration = {
-                trackEvent: function(eventName, eventData = {}) {
-                    window.ym(counterId, 'reachGoal', 'kinescope.video_event', {
-                        event: eventName,
-                        videoId: 'oak9QpYK2SdCoaWqDPh4n4',
-                        timestamp: Date.now(),
-                        ...eventData
-                    });
-                }
-            };
-
-            updateStatus('✅ Яндекс Метрика инициализирована');
-            logEvent('Инициализация', { counterId });
-        }
-
-        // Инициализация плеера (iframe версия)
-        function initializePlayer() {
-            if (!ymIntegration) {
-                alert('Сначала инициализируйте Яндекс Метрику');
-                return;
-            }
-
-            // Проверяем загрузку скриптов
-            if (!checkScriptsLoaded()) {
-                updateStatus('❌ Яндекс Метрика не загружена. Проверьте загрузку скрипта.');
-                logEvent('Ошибка загрузки', { 
-                    ym: typeof window.ym !== 'undefined'
-                });
-                return;
-            }
-
-            try {
-                // Настраиваем отслеживание событий для iframe
-                setupIframeEventTracking();
-                
-                updateStatus('✅ iframe плеер инициализирован с интеграцией Яндекс Метрики');
-                logEvent('Инициализация iframe плеера', { videoId: 'oak9QpYK2SdCoaWqDPh4n4' });
-
-            } catch (error) {
-                updateStatus('❌ Ошибка инициализации плеера: ' + error.message);
-                logEvent('Ошибка', { error: error.message });
-            }
-        }
-
-        // Инициализация плеера с настройками v2.166.1
-        function initializePlayerWithSettings() {
-            if (!ymIntegration) {
-                alert('Сначала инициализируйте Яндекс Метрику');
-                return;
-            }
-
-            const counterId = document.getElementById('counterId').value;
-            
-            try {
-                // Создаем iframe с настройками v2.166.1
-                const iframe = document.querySelector('#iframePlayer iframe');
-                if (iframe) {
-                    // Обновляем src с параметрами настроек
-                    const videoId = 'oak9QpYK2SdCoaWqDPh4n4';
-                    const settings = encodeURIComponent(JSON.stringify({
-                        yandexMetrics: { 
-                            counterId: counterId 
-                        }
-                    }));
-                    
-                    const newSrc = `https://kinescope.dev/${videoId}?debug=1&settings=${settings}`;
-                    iframe.src = newSrc;
-                    
-                    logEvent('Обновлен iframe с настройками v2.166.1', { 
-                        counterId: counterId,
-                        settings: { yandexMetrics: { counterId: counterId } }
-                    });
-                }
-
-                // Настраиваем отслеживание событий
-                setupIframeEventTracking();
-                
-                updateStatus('✅ Плеер инициализирован с настройками v2.166.1');
-                logEvent('Инициализация с настройками v2.166.1', { 
-                    videoId: 'oak9QpYK2SdCoaWqDPh4n4',
-                    counterId: counterId
-                });
-
-            } catch (error) {
-                updateStatus('❌ Ошибка инициализации с настройками: ' + error.message);
-                logEvent('Ошибка', { error: error.message });
-            }
-        }
-
-        // Настройка обработчиков событий плеера
-        function setupPlayerEventHandlers() {
-            if (!player || !ymIntegration) return;
-
-            // События воспроизведения
-            player.on('play', () => {
-                ymIntegration.trackEvent('play');
-                logEvent('Событие: play');
-            });
-
-            player.on('pause', () => {
-                ymIntegration.trackEvent('pause');
-                logEvent('Событие: pause');
-            });
-
-            player.on('ended', () => {
-                ymIntegration.trackEvent('ended');
-                logEvent('Событие: ended');
-            });
-
-            player.on('loadstart', () => {
-                ymIntegration.trackEvent('loadstart');
-                logEvent('Событие: loadstart');
-            });
-
-            player.on('canplay', () => {
-                ymIntegration.trackEvent('canplay');
-                logEvent('Событие: canplay');
-            });
-
-            // Отслеживание прогресса
-            let progressEvents = {
-                25: false,
-                50: false,
-                75: false,
-                90: false
-            };
-
-            player.on('timeupdate', () => {
-                const currentTime = player.getCurrentTime();
-                const duration = player.getDuration();
-                const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-                // Отправляем события по прогрессу
-                Object.keys(progressEvents).forEach(percent => {
-                    if (progress >= percent && !progressEvents[percent]) {
-                        ymIntegration.trackEvent(`progress_${percent}`, { progress: percent });
-                        logEvent(`Событие: progress_${percent}%`);
-                        progressEvents[percent] = true;
-                    }
-                });
-            });
-
-            // Обработка ошибок
-            player.on('error', (error) => {
-                ymIntegration.trackEvent('video_error', { 
-                    errorCode: error.code,
-                    errorMessage: error.message 
-                });
-                logEvent('Событие: error', { error: error.message });
-            });
-        }
-
-        // Управление воспроизведением (для iframe)
-        function playVideo() {
-            if (!ymIntegration) {
-                alert('Сначала инициализируйте Яндекс Метрику');
-                return;
-            }
-            
-            // Отправляем событие play
-            ymIntegration.trackEvent('play');
-            logEvent('Событие: play (кнопка)');
-        }
-
-        function pauseVideo() {
-            if (!ymIntegration) {
-                alert('Сначала инициализируйте Яндекс Метрику');
-                return;
-            }
-            
-            // Отправляем событие pause
-            ymIntegration.trackEvent('pause');
-            logEvent('Событие: pause (кнопка)');
-        }
-
-        // Отправка кастомного события
-        function sendCustomEvent() {
-            if (!ymIntegration) {
-                alert('Яндекс Метрика не инициализирована');
-                return;
-            }
-
-            const eventData = {
-                customProperty: 'test_value',
-                timestamp: Date.now(),
-                userAction: 'manual_trigger'
-            };
-
-            ymIntegration.trackEvent('custom_test_event', eventData);
-            logEvent('Кастомное событие: custom_test_event', eventData);
-        }
-
-        // Тестирование всех событий
-        function testAllEvents() {
-            if (!ymIntegration) {
-                alert('Яндекс Метрика не инициализирована');
-                return;
-            }
-
-            const events = [
-                { name: 'play', data: {} },
-                { name: 'pause', data: {} },
-                { name: 'ended', data: {} },
-                { name: 'loadstart', data: {} },
-                { name: 'canplay', data: {} },
-                { name: 'progress_25', data: { progress: 25 } },
-                { name: 'progress_50', data: { progress: 50 } },
-                { name: 'progress_75', data: { progress: 75 } },
-                { name: 'progress_90', data: { progress: 90 } },
-                { name: 'video_error', data: { errorCode: 'TEST_ERROR' } },
-                { name: 'custom_event', data: { test: true } }
-            ];
-
-            logEvent('Начинаем тестирование всех событий...');
-            
-            events.forEach((event, index) => {
-                setTimeout(() => {
-                    ymIntegration.trackEvent(event.name, event.data);
-                    logEvent(`Тест событие: ${event.name}`, event.data);
-                }, index * 500); // Отправляем каждые 500мс
-            });
-
-            setTimeout(() => {
-                logEvent('Тестирование всех событий завершено!');
-            }, events.length * 500 + 1000);
-        }
-
-        // Тестирование настроек v2.166.1
-        function testV21661Settings() {
-            if (!ymIntegration) {
-                alert('Яндекс Метрика не инициализирована');
-                return;
-            }
-
-            const counterId = document.getElementById('counterId').value;
-            
-            logEvent('Тестирование настроек v2.166.1...');
-            
-            // Показываем, как должны выглядеть настройки
-            const settings = {
-                yandexMetrics: { 
-                    counterId: counterId 
-                }
-            };
-            
-            logEvent('Настройки v2.166.1:', settings);
-            
-            // Имитируем события, которые должны отправляться с этими настройками
-            // Все события используют идентификатор цели 'kinescope.video_event'
-            const v21661Events = [
-                { name: 'play', data: { version: '2.166.1', counterId: counterId, event: 'play' } },
-                { name: 'pause', data: { version: '2.166.1', counterId: counterId, event: 'pause' } },
-                { name: 'progress_25', data: { version: '2.166.1', progress: 25, counterId: counterId, event: 'progress_25' } },
-                { name: 'progress_50', data: { version: '2.166.1', progress: 50, counterId: counterId, event: 'progress_50' } },
-                { name: 'ended', data: { version: '2.166.1', counterId: counterId, event: 'ended' } }
-            ];
-            
-            v21661Events.forEach((event, index) => {
-                setTimeout(() => {
-                    ymIntegration.trackEvent(event.name, event.data);
-                    logEvent(`v2.166.1 событие: ${event.name}`, event.data);
-                }, index * 800);
-            });
-            
-            setTimeout(() => {
-                logEvent('Тестирование настроек v2.166.1 завершено!');
-                logEvent('Проверьте Яндекс Метрику на наличие событий с префиксом kinescope_');
-            }, v21661Events.length * 800 + 1000);
-        }
-
-        // Обновление статуса
-        function updateStatus(message) {
-            document.getElementById('status').innerHTML = message;
-        }
+        // Конфигурация плеера
+        window.KinescopeIframePlayerConfig = {
+            ...window.KinescopeIframePlayerConfig,
+            player: {
+                behavior: {
+                    localStorage: true,
+                },
+                ui: { 
+                    playbackRateButton: true 
+                },
+            },
+        };
 
         // Логирование событий
         function logEvent(message, data = {}) {
             eventCounter++;
             const timestamp = new Date().toLocaleTimeString();
             const eventDiv = document.createElement('div');
-            eventDiv.className = 'event-item';
-            eventDiv.innerHTML = `
-                <strong>[${timestamp}] #${eventCounter}</strong> ${message}
-                ${Object.keys(data).length > 0 ? `<br><small>Данные: ${JSON.stringify(data)}</small>` : ''}
-            `;
+            eventDiv.className = 'log-entry';
+            eventDiv.innerHTML = `[${timestamp}] #${eventCounter} ${message}`;
+            if (Object.keys(data).length > 0) {
+                eventDiv.innerHTML += `<br>Данные: ${JSON.stringify(data)}`;
+            }
             
             const logContainer = document.getElementById('eventLog');
             logContainer.insertBefore(eventDiv, logContainer.firstChild);
         }
 
-        // Переключение на iframe плеер
-        function useIframePlayer() {
-            if (!ymIntegration) {
-                alert('Сначала инициализируйте Яндекс Метрику');
+        // Обновление статуса
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = `<strong>Статус:</strong> ${message}`;
+            statusEl.className = `status ${type}`;
+        }
+
+        // Инициализация плеера
+        async function initializePlayer() {
+            const counterId = document.getElementById('counterId').value;
+            const videoId = document.getElementById('videoId').value;
+            
+            if (!counterId) {
+                alert('Пожалуйста, введите ID счетчика Яндекс Метрики');
+                return;
+            }
+            
+            if (!videoId) {
+                alert('Пожалуйста, введите ID видео');
                 return;
             }
 
-            // Скрываем основной плеер и показываем iframe
-            document.getElementById('player').style.display = 'none';
-            document.getElementById('iframePlayer').style.display = 'block';
-            
-            // Настраиваем отслеживание событий для iframe
-            setupIframeEventTracking();
-            
-            updateStatus('✅ Используется iframe плеер с интеграцией Яндекс Метрики');
-            logEvent('Переключение на iframe плеер');
-        }
-
-        // Настройка отслеживания событий для iframe
-        function setupIframeEventTracking() {
-            const iframe = document.querySelector('#iframePlayer iframe');
-            
-            if (!iframe) return;
-
-            // Настраиваем отслеживание событий через postMessage
-            setupPostMessageTracking();
-
-            // Отправляем события при взаимодействии с iframe
-            iframe.addEventListener('load', () => {
-                ymIntegration.trackEvent('iframe_loaded');
-                logEvent('Событие: iframe_loaded');
-                
-                // Настраиваем отслеживание событий внутри iframe
-                setupIframePlayerEvents(iframe);
-                
-                // Имитируем события плеера
-                setTimeout(() => {
-                    ymIntegration.trackEvent('play');
-                    logEvent('Событие: play (имитация)');
-                }, 1000);
-                
-                setTimeout(() => {
-                    ymIntegration.trackEvent('progress_25', { progress: 25 });
-                    logEvent('Событие: progress_25% (имитация)');
-                }, 3000);
-                
-                setTimeout(() => {
-                    ymIntegration.trackEvent('progress_50', { progress: 50 });
-                    logEvent('Событие: progress_50% (имитация)');
-                }, 5000);
-            });
-
-            // Имитируем события воспроизведения
-            setTimeout(() => {
-                ymIntegration.trackEvent('iframe_ready');
-                logEvent('Событие: iframe_ready');
-            }, 2000);
-        }
-
-        // Настройка отслеживания через postMessage API
-        function setupPostMessageTracking() {
-            window.addEventListener('message', (event) => {
-                // Проверяем, что сообщение от Kinescope iframe
-                if (event.origin !== 'https://kinescope.dev') return;
-                
-                const data = event.data;
-                
-                if (data && data.type === 'kinescope_event') {
-                    const eventName = data.event;
-                    const eventData = data.data || {};
-                    
-                    // Отправляем событие в Яндекс Метрику
-                    ymIntegration.trackEvent(eventName, eventData);
-                    logEvent(`Событие: ${eventName} (из iframe postMessage)`, eventData);
-                }
-            });
-        }
-
-        // Настройка отслеживания событий внутри iframe
-        function setupIframePlayerEvents(iframe) {
             try {
-                // Пытаемся получить доступ к содержимому iframe
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                updateStatus('Инициализация плеера...', 'info');
+                logEvent('Начинаем инициализацию плеера', { counterId, videoId });
+
+                const playerEl = document.getElementById('player');
                 
-                if (iframeDoc) {
-                    // Ищем видео элемент внутри iframe
-                    const video = iframeDoc.querySelector('video');
-                    
-                    if (video) {
-                        // Отслеживаем события видео
-                        video.addEventListener('play', () => {
-                            ymIntegration.trackEvent('play');
-                            logEvent('Событие: play (из iframe)');
-                        });
-                        
-                        video.addEventListener('pause', () => {
-                            ymIntegration.trackEvent('pause');
-                            logEvent('Событие: pause (из iframe)');
-                        });
-                        
-                        video.addEventListener('ended', () => {
-                            ymIntegration.trackEvent('ended');
-                            logEvent('Событие: ended (из iframe)');
-                        });
-                        
-                        video.addEventListener('timeupdate', () => {
-                            const currentTime = video.currentTime;
-                            const duration = video.duration;
-                            const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-                            
-                            // Отправляем события по прогрессу
-                            if (progress >= 25 && !video._ym25Sent) {
-                                ymIntegration.trackEvent('progress_25', { progress: 25 });
-                                logEvent('Событие: progress_25% (из iframe)');
-                                video._ym25Sent = true;
-                            }
-                            if (progress >= 50 && !video._ym50Sent) {
-                                ymIntegration.trackEvent('progress_50', { progress: 50 });
-                                logEvent('Событие: progress_50% (из iframe)');
-                                video._ym50Sent = true;
-                            }
-                            if (progress >= 75 && !video._ym75Sent) {
-                                ymIntegration.trackEvent('progress_75', { progress: 75 });
-                                logEvent('Событие: progress_75% (из iframe)');
-                                video._ym75Sent = true;
-                            }
-                            if (progress >= 90 && !video._ym90Sent) {
-                                ymIntegration.trackEvent('progress_90', { progress: 90 });
-                                logEvent('Событие: progress_90% (из iframe)');
-                                video._ym90Sent = true;
-                            }
-                        });
-                        
-                        logEvent('Отслеживание событий видео настроено в iframe');
-                    }
-                }
+                // Устанавливаем URL видео
+                playerEl.setAttribute('url', `https://kinescope.dev/embed/${videoId}`);
+                
+                // Ждем загрузки плеера
+                player = await playerEl.waitInstance();
+                
+                logEvent('✅ Плеер загружен успешно', { 
+                    version: '2.166.1',
+                    videoId: videoId,
+                    referrerPolicy: playerEl.getAttribute('referrerpolicy')
+                });
+
+                // Настраиваем отслеживание событий
+                setupPlayerEventTracking();
+                
+                updateStatus('✅ Плеер инициализирован с интеграцией Яндекс Метрики', 'success');
+                logEvent('🎯 Интеграция с Яндекс Метрикой настроена', { 
+                    counterId: counterId,
+                    goal: 'kinescope.video_event'
+                });
+
             } catch (error) {
-                // CORS ошибка - это нормально для iframe с другого домена
-                logEvent('CORS ограничение для iframe (это нормально)', { error: error.message });
+                updateStatus('❌ Ошибка инициализации плеера: ' + error.message, 'error');
+                logEvent('❌ Ошибка инициализации', { error: error.message });
             }
         }
 
-        // Проверка статуса интеграции
-        function checkIntegrationStatus() {
-            const status = {
-                ymLoaded: typeof window.ym !== 'undefined',
-                ymIntegration: !!ymIntegration,
-                counterId: document.getElementById('counterId').value,
-                iframeLoaded: !!document.querySelector('#iframePlayer iframe'),
-                totalEvents: eventCounter
-            };
+        // Настройка отслеживания событий плеера
+        function setupPlayerEventTracking() {
+            if (!player) return;
 
-            logEvent('Проверка статуса интеграции', status);
-            
-            if (status.ymLoaded && status.ymIntegration) {
-                updateStatus('✅ Интеграция работает корректно');
-                logEvent('✅ Все компоненты загружены и работают');
-                
-                // Проверяем правильность отправки событий
-                testGoalIdentifier();
-            } else {
-                updateStatus('❌ Проблемы с интеграцией');
-                logEvent('❌ Обнаружены проблемы с интеграцией');
-            }
-        }
+            logEvent('Настройка отслеживания событий плеера...');
 
-        // Проверка идентификатора цели kinescope.video_event
-        function testGoalIdentifier() {
-            if (!ymIntegration) return;
-            
-            logEvent('Проверка идентификатора цели: kinescope.video_event');
-            
-            // Отправляем тестовое событие с правильным идентификатором
-            const testEvent = {
-                event: 'test_goal_identifier',
-                timestamp: Date.now(),
-                test: true
-            };
-            
-            // Проверяем, что событие отправляется с правильным идентификатором
-            ymIntegration.trackEvent('test_goal_identifier', testEvent);
-            logEvent('✅ Тестовое событие отправлено с идентификатором kinescope.video_event', testEvent);
-            
-            // Показываем, как должно выглядеть событие в Яндекс Метрике
-            logEvent('Событие в Яндекс Метрике:', {
-                goal: 'kinescope.video_event',
-                params: testEvent
+            // События воспроизведения
+            player.on('play', () => {
+                sendYandexMetrikaEvent('play');
+                logEvent('▶️ Событие: play');
             });
-            
-            // Проверяем реальную Яндекс Метрику
-            checkRealYandexMetrika();
+
+            player.on('pause', () => {
+                sendYandexMetrikaEvent('pause');
+                logEvent('⏸️ Событие: pause');
+            });
+
+            player.on('ended', () => {
+                sendYandexMetrikaEvent('ended');
+                logEvent('🏁 Событие: ended');
+            });
+
+            // События прогресса
+            player.on('timeupdate', (data) => {
+                const progress = data.progress || 0;
+                
+                // Отправляем события по прогрессу
+                if (progress >= 25 && !player._ym25Sent) {
+                    sendYandexMetrikaEvent('progress_25', { progress: 25 });
+                    logEvent('📊 Событие: progress_25%', { progress: 25 });
+                    player._ym25Sent = true;
+                }
+                if (progress >= 50 && !player._ym50Sent) {
+                    sendYandexMetrikaEvent('progress_50', { progress: 50 });
+                    logEvent('📊 Событие: progress_50%', { progress: 50 });
+                    player._ym50Sent = true;
+                }
+                if (progress >= 75 && !player._ym75Sent) {
+                    sendYandexMetrikaEvent('progress_75', { progress: 75 });
+                    logEvent('📊 Событие: progress_75%', { progress: 75 });
+                    player._ym75Sent = true;
+                }
+                if (progress >= 90 && !player._ym90Sent) {
+                    sendYandexMetrikaEvent('progress_90', { progress: 90 });
+                    logEvent('📊 Событие: progress_90%', { progress: 90 });
+                    player._ym90Sent = true;
+                }
+            });
+
+            // События загрузки
+            player.on('loadstart', () => {
+                sendYandexMetrikaEvent('loadstart');
+                logEvent('🔄 Событие: loadstart');
+            });
+
+            player.on('canplay', () => {
+                sendYandexMetrikaEvent('canplay');
+                logEvent('✅ Событие: canplay');
+            });
+
+            // События ошибок
+            player.on('error', (error) => {
+                sendYandexMetrikaEvent('video_error', { error: error.message });
+                logEvent('❌ Событие: video_error', { error: error.message });
+            });
+
+            logEvent('✅ Отслеживание событий настроено');
         }
 
-        // Проверка реальной Яндекс Метрики
-        function checkRealYandexMetrika() {
+        // Отправка события в Яндекс Метрику
+        function sendYandexMetrikaEvent(eventName, eventData = {}) {
             const counterId = document.getElementById('counterId').value;
+            const videoId = document.getElementById('videoId').value;
             
-            logEvent('Проверка реальной Яндекс Метрики...');
-            
-            // Проверяем, что Яндекс Метрика действительно загружена
             if (typeof window.ym === 'function') {
-                logEvent('✅ Функция ym() доступна');
-                
-                // Проверяем, что это реальная Яндекс Метрика, а не наша заглушка
-                if (window.ym.toString().includes('console.log')) {
-                    logEvent('⚠️ Обнаружена заглушка ym() - Яндекс Метрика не загружена!');
-                    logEvent('❌ События не будут отправлены в реальную Яндекс Метрику');
-                    logEvent('🔧 Решение: Проверьте загрузку скрипта Яндекс Метрики');
-                    return;
-                }
-                
-                // Отправляем событие напрямую в Яндекс Метрику
                 try {
-                    logEvent('📤 Отправляем событие в Яндекс Метрику...');
-                    logEvent('🔍 Откройте Developer Tools (F12) → Network → ищите запросы к mc.yandex.ru');
-                    
                     window.ym(counterId, 'reachGoal', 'kinescope.video_event', {
-                        event: 'real_ym_test',
+                        event: eventName,
+                        videoId: videoId,
                         timestamp: Date.now(),
-                        test: 'real_yandex_metrika'
+                        version: '2.166.1',
+                        ...eventData
                     });
                     
-                    logEvent('✅ Событие отправлено напрямую в Яндекс Метрику', {
+                    logEvent(`📤 Отправлено в Яндекс Метрику: ${eventName}`, {
+                        counterId: counterId,
+                        goal: 'kinescope.video_event',
+                        data: eventData
+                    });
+                } catch (error) {
+                    logEvent('❌ Ошибка отправки в Яндекс Метрику', { error: error.message });
+                }
+            } else {
+                logEvent('⚠️ Яндекс Метрика не загружена');
+            }
+        }
+
+        // Тестирование событий
+        function testEvents() {
+            if (!player) {
+                alert('Сначала инициализируйте плеер');
+                return;
+            }
+
+            logEvent('🧪 Начинаем тестирование событий...');
+            
+            const events = [
+                { name: 'play', data: {} },
+                { name: 'pause', data: {} },
+                { name: 'progress_25', data: { progress: 25 } },
+                { name: 'progress_50', data: { progress: 50 } },
+                { name: 'progress_75', data: { progress: 75 } },
+                { name: 'progress_90', data: { progress: 90 } },
+                { name: 'ended', data: {} },
+                { name: 'loadstart', data: {} },
+                { name: 'canplay', data: {} },
+                { name: 'video_error', data: { errorCode: 'TEST_ERROR' } }
+            ];
+
+            events.forEach((event, index) => {
+                setTimeout(() => {
+                    sendYandexMetrikaEvent(event.name, event.data);
+                    logEvent(`🧪 Тест: ${event.name}`, event.data);
+                }, index * 1000);
+            });
+
+            setTimeout(() => {
+                logEvent('✅ Тестирование событий завершено!');
+            }, events.length * 1000 + 1000);
+        }
+
+        // Проверка Яндекс Метрики
+        function checkYandexMetrika() {
+            const counterId = document.getElementById('counterId').value;
+            
+            logEvent('🔍 Проверка Яндекс Метрики...');
+            
+            if (typeof window.ym === 'function') {
+                logEvent('✅ Яндекс Метрика загружена');
+                
+                // Отправляем тестовое событие
+                try {
+                    window.ym(counterId, 'reachGoal', 'kinescope.video_event', {
+                        event: 'test_yandex_metrika',
+                        timestamp: Date.now(),
+                        test: true
+                    });
+                    
+                    logEvent('✅ Тестовое событие отправлено в Яндекс Метрику', {
                         counterId: counterId,
                         goal: 'kinescope.video_event'
                     });
                     
-                    // Отправляем несколько тестовых событий
-                    setTimeout(() => {
-                        window.ym(counterId, 'reachGoal', 'kinescope.video_event', {
-                            event: 'test_play',
-                            timestamp: Date.now()
-                        });
-                        logEvent('✅ Отправлено тестовое событие: test_play');
-                    }, 1000);
-                    
-                    setTimeout(() => {
-                        window.ym(counterId, 'reachGoal', 'kinescope.video_event', {
-                            event: 'test_pause',
-                            timestamp: Date.now()
-                        });
-                        logEvent('✅ Отправлено тестовое событие: test_pause');
-                    }, 2000);
-                    
-                    // Проверяем, что событие было отправлено
-                    setTimeout(() => {
-                        logEvent('ℹ️ Проверьте отчеты в Яндекс Метрике:');
-                        logEvent('1. Отчеты → Цели → найдите цель "kinescope.video_event"');
-                        logEvent('2. Отчеты → События → ищите события с идентификатором "kinescope.video_event"');
-                        logEvent('3. Отчеты → Поведение → События');
-                        logEvent('ℹ️ События могут появиться с задержкой до 24 часов');
-                    }, 3000);
+                    logEvent('ℹ️ Проверьте отчеты в Яндекс Метрике через 5-10 минут');
+                    logEvent('ℹ️ Отчеты → Цели → найдите цель "kinescope.video_event"');
                     
                 } catch (error) {
-                    logEvent('❌ Ошибка отправки в Яндекс Метрику:', error);
+                    logEvent('❌ Ошибка отправки в Яндекс Метрику', { error: error.message });
                 }
             } else {
-                logEvent('❌ Функция ym() не найдена - Яндекс Метрика не загружена');
+                logEvent('❌ Яндекс Метрика не загружена');
             }
-        }
-
-        // Показать инструкции по поиску событий в Яндекс Метрике
-        function showYandexMetrikaInstructions() {
-            logEvent('📋 ИНСТРУКЦИИ: Где искать события в Яндекс Метрике');
-            logEvent('');
-            logEvent('1️⃣ ОТЧЕТЫ → ЦЕЛИ:');
-            logEvent('   • Перейдите в "Отчеты" → "Стандартные отчеты" → "Цели"');
-            logEvent('   • Найдите цель с идентификатором "kinescope.video_event"');
-            logEvent('   • Если цели нет, создайте её:');
-            logEvent('     - Название: "Kinescope Video Events"');
-            logEvent('     - Тип условия: JavaScript-событие');
-            logEvent('     - Идентификатор цели: kinescope.video_event');
-            logEvent('');
-            logEvent('2️⃣ ОТЧЕТЫ → СОБЫТИЯ:');
-            logEvent('   • Перейдите в "Отчеты" → "Стандартные отчеты" → "События"');
-            logEvent('   • Ищите события с идентификатором "kinescope.video_event"');
-            logEvent('');
-            logEvent('3️⃣ ОТЧЕТЫ → ПОВЕДЕНИЕ → СОБЫТИЯ:');
-            logEvent('   • Перейдите в "Отчеты" → "Стандартные отчеты" → "Поведение" → "События"');
-            logEvent('');
-            logEvent('4️⃣ ВАЖНО:');
-            logEvent('   • События могут появиться с задержкой 5-10 минут');
-            logEvent('   • В некоторых случаях до 24 часов');
-            logEvent('   • Убедитесь, что счетчик активен');
-            logEvent('   • Проверьте, что цель создана и активна');
-            logEvent('');
-            logEvent('5️⃣ ДИАГНОСТИКА:');
-            logEvent('   • Откройте Developer Tools (F12)');
-            logEvent('   • Вкладка Network → ищите запросы к mc.yandex.ru');
-            logEvent('   • Проверьте, что нет ошибок в консоли');
-        }
-
-        // Перезагрузка страницы для очистки заглушки
-        function reloadPage() {
-            logEvent('🔄 Перезагружаем страницу для очистки заглушки ym()...');
-            logEvent('ℹ️ После перезагрузки Яндекс Метрика должна загрузиться корректно');
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
         }
 
         // Очистка лога
@@ -825,19 +460,9 @@
                 timestamp: Date.now()
             });
             
-            // Проверяем загрузку скриптов через 2 секунды
-            setTimeout(() => {
-                if (checkScriptsLoaded()) {
-                    logEvent('✅ Яндекс Метрика загружена успешно');
-                    logEvent('✅ Официальный скрипт iframe.ym.js загружен');
-                    logEvent('ℹ️ Используется официальная интеграция v2.166.1');
-                } else {
-                    logEvent('❌ Ошибка загрузки скриптов', { 
-                        ym: typeof window.ym !== 'undefined',
-                        iframeScript: document.querySelector('script[src*="iframe.ym.js"]') !== null
-                    });
-                }
-            }, 2000);
+            logEvent('🎬 Kinescope Player v2.166.1 готов к работе');
+            logEvent('📊 Интеграция с Яндекс Метрикой настроена');
+            logEvent('ℹ️ Нажмите "Инициализировать плеер" для начала работы');
         });
     </script>
 </body>
