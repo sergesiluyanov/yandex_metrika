@@ -151,6 +151,7 @@
             <button onclick="initializePlayer()">🎬 Инициализировать плеер</button>
             <button onclick="testEvents()">🧪 Тест событий</button>
             <button onclick="testClickPlay()">🎯 Тест цели kinescope.play</button>
+            <button onclick="sendVideoEvent()">📊 Отправить kinescope.video_event</button>
             <button onclick="checkYandexMetrika()">🔍 Проверить Яндекс Метрику</button>
             <button onclick="clearLog()">🗑️ Очистить лог</button>
         </div>
@@ -454,6 +455,43 @@
                     
                 } catch (error) {
                     logEvent('❌ Ошибка тестирования kinescope.play', { error: error.message });
+                }
+            } else {
+                logEvent('❌ Яндекс Метрика не загружена');
+            }
+        }
+
+        // Отправка события kinescope.video_event
+        function sendVideoEvent() {
+            const counterId = document.getElementById('counterId').value;
+            const videoId = document.getElementById('videoId').value;
+            
+            logEvent('📊 Отправка события kinescope.video_event...');
+            
+            if (typeof window.ym === 'function') {
+                try {
+                    // Отправляем напрямую в цель kinescope.video_event
+                    window.ym(counterId, 'reachGoal', 'kinescope.video_event', {
+                        event: 'manual_video_event',
+                        videoId: videoId,
+                        timestamp: Date.now(),
+                        version: '2.166.1',
+                        source: 'button_click',
+                        test: true
+                    });
+                    
+                    logEvent('✅ Событие kinescope.video_event отправлено', {
+                        counterId: counterId,
+                        goal: 'kinescope.video_event',
+                        videoId: videoId
+                    });
+                    
+                    logEvent('ℹ️ Проверьте в Яндекс Метрике:');
+                    logEvent('1. Отчеты → Цели → найдите цель "kinescope.video_event"');
+                    logEvent('2. Должно показать достижение цели');
+                    
+                } catch (error) {
+                    logEvent('❌ Ошибка отправки kinescope.video_event', { error: error.message });
                 }
             } else {
                 logEvent('❌ Яндекс Метрика не загружена');
