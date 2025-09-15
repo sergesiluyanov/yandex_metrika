@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinescope Player - Яндекс Метрика интеграция</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .player-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .event-log {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .event-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: white;
+            border-left: 3px solid #007bff;
+            padding-left: 10px;
+        }
+        .config {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            width: 200px;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Kinescope Player - Интеграция с Яндекс Метрикой</h1>
+        
+        <div class="config">
+            <h3>⚙️ Настройки</h3>
+            <label for="counterId">ID счетчика Яндекс Метрики:</label>
+            <input type="text" id="counterId" value="12345678" placeholder="Введите ID счетчика">
+            <button onclick="initializeYM()">Инициализировать Яндекс Метрику</button>
+            <button onclick="initializePlayer()">Инициализировать плеер</button>
+        </div>
+
+        <div class="player-container">
+            <div id="player"></div>
+        </div>
+
+        <div class="controls">
+            <button onclick="playVideo()">▶️ Воспроизвести</button>
+            <button onclick="pauseVideo()">⏸️ Пауза</button>
+            <button onclick="sendCustomEvent()">📊 Отправить кастомное событие</button>
+            <button onclick="clearLog()">🗑️ Очистить лог</button>
+        </div>
+
+        <div class="status">
+            <h3>📊 Статус интеграции</h3>
+            <div id="status">Не инициализировано</div>
+        </div>
+
+        <div class="event-log">
+            <h3>📝 Лог событий</h3>
+            <div id="eventLog">События будут отображаться здесь...</div>
+        </div>
+    </div>
+
+    <!-- Яндекс Метрика (замените на ваш код) -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        // Замените 12345678 на ваш реальный ID счетчика
+        ym(12345678, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+
+    <!-- Скрипт интеграции с Яндекс Метрикой для iframe -->
+    <script src="https://player.kinescope.io/latest/iframe.ym.js"></script>
+
+    <!-- Kinescope Player SDK -->
+    <script src="https://player.kinescope.io/latest/kinescope-player.js"></script>
+
+    <script>
+        let player = null;
+        let ymIntegration = null;
+        let eventCounter = 0;
+
+        // Инициализация Яндекс Метрики
+        function initializeYM() {
+            const counterId = document.getElementById('counterId').value;
+            
+            if (!counterId) {
+                alert('Пожалуйста, введите ID счетчика Яндекс Метрики');
+                return;
+            }
+
+            // Имитация инициализации Яндекс Метрики
+            window.ym = window.ym || function(counterId, action, goal, params) {
+                console.log('YM Event:', { counterId, action, goal, params });
+                logEvent(`YM Event: ${action} - ${goal}`, params);
+                return true;
+            };
+
+            ymIntegration = {
+                trackEvent: function(eventName, eventData = {}) {
+                    window.ym(counterId, 'reachGoal', 'kinescope.video_event', {
+                        event: eventName,
+                        ...eventData
+                    });
+                }
+            };
+
+            updateStatus('✅ Яндекс Метрика инициализирована');
+            logEvent('Инициализация', { counterId });
+        }
+
+        // Инициализация плеера
+        function initializePlayer() {
+            if (!ymIntegration) {
+                alert('Сначала инициализируйте Яндекс Метрику');
+                return;
+            }
+
+            try {
+                player = new KinescopePlayer({
+                    container: '#player',
+                    videoId: 'oak9QpYK2SdCoaWqDPh4n4', // Замените на ваш video ID
+                    width: '100%',
+                    height: '400px',
+                    // Настройки интеграции с Яндекс Метрикой
+                    yandexMetrika: {
+                        counterId: document.getElementById('counterId').value,
+                        enabled: true
+                    }
+                });
+
+                // Настройка обработчиков событий
+                setupPlayerEventHandlers();
+
+                updateStatus('✅ Плеер инициализирован с интеграцией Яндекс Метрики');
+                logEvent('Инициализация плеера', { videoId: 'oak9QpYK2SdCoaWqDPh4n4' });
+
+            } catch (error) {
+                updateStatus('❌ Ошибка инициализации плеера: ' + error.message);
+                logEvent('Ошибка', { error: error.message });
+            }
+        }
+
+        // Настройка обработчиков событий плеера
+        function setupPlayerEventHandlers() {
+            if (!player || !ymIntegration) return;
+
+            // События воспроизведения
+            player.on('play', () => {
+                ymIntegration.trackEvent('play');
+                logEvent('Событие: play');
+            });
+
+            player.on('pause', () => {
+                ymIntegration.trackEvent('pause');
+                logEvent('Событие: pause');
+            });
+
+            player.on('ended', () => {
+                ymIntegration.trackEvent('ended');
+                logEvent('Событие: ended');
+            });
+
+            player.on('loadstart', () => {
+                ymIntegration.trackEvent('loadstart');
+                logEvent('Событие: loadstart');
+            });
+
+            player.on('canplay', () => {
+                ymIntegration.trackEvent('canplay');
+                logEvent('Событие: canplay');
+            });
+
+            // Отслеживание прогресса
+            let progressEvents = {
+                25: false,
+                50: false,
+                75: false,
+                90: false
+            };
+
+            player.on('timeupdate', () => {
+                const currentTime = player.getCurrentTime();
+                const duration = player.getDuration();
+                const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+                // Отправляем события по прогрессу
+                Object.keys(progressEvents).forEach(percent => {
+                    if (progress >= percent && !progressEvents[percent]) {
+                        ymIntegration.trackEvent(`progress_${percent}`, { progress: percent });
+                        logEvent(`Событие: progress_${percent}%`);
+                        progressEvents[percent] = true;
+                    }
+                });
+            });
+
+            // Обработка ошибок
+            player.on('error', (error) => {
+                ymIntegration.trackEvent('video_error', { 
+                    errorCode: error.code,
+                    errorMessage: error.message 
+                });
+                logEvent('Событие: error', { error: error.message });
+            });
+        }
+
+        // Управление воспроизведением
+        function playVideo() {
+            if (player) {
+                player.play();
+            } else {
+                alert('Плеер не инициализирован');
+            }
+        }
+
+        function pauseVideo() {
+            if (player) {
+                player.pause();
+            } else {
+                alert('Плеер не инициализирован');
+            }
+        }
+
+        // Отправка кастомного события
+        function sendCustomEvent() {
+            if (!ymIntegration) {
+                alert('Яндекс Метрика не инициализирована');
+                return;
+            }
+
+            const eventData = {
+                customProperty: 'test_value',
+                timestamp: Date.now(),
+                userAction: 'manual_trigger'
+            };
+
+            ymIntegration.trackEvent('custom_test_event', eventData);
+            logEvent('Кастомное событие: custom_test_event', eventData);
+        }
+
+        // Обновление статуса
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
+        }
+
+        // Логирование событий
+        function logEvent(message, data = {}) {
+            eventCounter++;
+            const timestamp = new Date().toLocaleTimeString();
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event-item';
+            eventDiv.innerHTML = `
+                <strong>[${timestamp}] #${eventCounter}</strong> ${message}
+                ${Object.keys(data).length > 0 ? `<br><small>Данные: ${JSON.stringify(data)}</small>` : ''}
+            `;
+            
+            const logContainer = document.getElementById('eventLog');
+            logContainer.insertBefore(eventDiv, logContainer.firstChild);
+        }
+
+        // Очистка лога
+        function clearLog() {
+            document.getElementById('eventLog').innerHTML = 'События будут отображаться здесь...';
+            eventCounter = 0;
+        }
+
+        // Автоматическая инициализация при загрузке страницы
+        window.addEventListener('load', () => {
+            logEvent('Страница загружена', { 
+                userAgent: navigator.userAgent,
+                timestamp: Date.now()
+            });
+        });
+    </script>
+</body>
+</html>
