@@ -150,7 +150,7 @@
         <div class="controls">
             <button onclick="initializePlayer()">🎬 Инициализировать плеер</button>
             <button onclick="testEvents()">🧪 Тест событий</button>
-            <button onclick="testClickPlay()">🎯 Тест цели clickPlay</button>
+            <button onclick="testClickPlay()">🎯 Тест цели kinescope.play</button>
             <button onclick="checkYandexMetrika()">🔍 Проверить Яндекс Метрику</button>
             <button onclick="clearLog()">🗑️ Очистить лог</button>
         </div>
@@ -364,7 +364,7 @@
                     let goalId = 'kinescope.video_event'; // По умолчанию
                     
                     if (eventName === 'play') {
-                        goalId = 'clickPlay'; // Специальная цель для клика play
+                        goalId = 'kinescope.play'; // Специальная цель для клика play
                     }
                     
                     window.ym(counterId, 'reachGoal', goalId, {
@@ -422,38 +422,38 @@
             }, events.length * 1000 + 1000);
         }
 
-        // Тестирование цели clickPlay
+        // Тестирование цели kinescope.play
         function testClickPlay() {
             const counterId = document.getElementById('counterId').value;
             
-            logEvent('🎯 Тестирование цели clickPlay...');
+            logEvent('🎯 Тестирование цели kinescope.play...');
             
             if (typeof window.ym === 'function') {
                 try {
-                    // Отправляем событие play, которое будет использовать цель clickPlay
+                    // Отправляем событие play, которое будет использовать цель kinescope.play
                     sendYandexMetrikaEvent('play', { 
                         test: true,
                         source: 'manual_test'
                     });
                     
                     // Также отправляем напрямую для проверки
-                    window.ym(counterId, 'reachGoal', 'clickPlay', {
-                        event: 'clickPlay_test',
+                    window.ym(counterId, 'reachGoal', 'kinescope.play', {
+                        event: 'kinescope.play_test',
                         timestamp: Date.now(),
                         test: true
                     });
                     
-                    logEvent('✅ Тест цели clickPlay отправлен', {
+                    logEvent('✅ Тест цели kinescope.play отправлен', {
                         counterId: counterId,
-                        goal: 'clickPlay'
+                        goal: 'kinescope.play'
                     });
                     
                     logEvent('ℹ️ Проверьте в Яндекс Метрике:');
-                    logEvent('1. Отчеты → Цели → найдите цель "clickPlay"');
+                    logEvent('1. Отчеты → Цели → найдите цель "kinescope.play"');
                     logEvent('2. Должно показать достижение цели');
                     
                 } catch (error) {
-                    logEvent('❌ Ошибка тестирования clickPlay', { error: error.message });
+                    logEvent('❌ Ошибка тестирования kinescope.play', { error: error.message });
                 }
             } else {
                 logEvent('❌ Яндекс Метрика не загружена');
